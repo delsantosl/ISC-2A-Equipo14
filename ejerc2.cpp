@@ -1,51 +1,83 @@
-// Ejerc 2
-
+// Ejercicio 2  (TECLADO)
 
 #include <iostream>
-#include <string>
 using namespace std;
+#define TAM 250
 
-void transTxt(string cadEnt);
-void mostrar(const string &cadSal);
+void transTxt(char* cadEnt);
+void mostrar(char* cadSal);
 
 int main() {
-    string cadEnt;
-    cout << "Introduce un texto: ";
-    cin >> cadEnt;
-    transTxt(cadEnt);
-}
-
-//Funcion que transforma la cadena de entrada dependiendo de las teclas introducidas
-void transTxt(string cadEnt) {
-    string cadSal = ""; // Cadena de salida vacia
-    int cursor = 0;     // Posicion del "cursor"
-
-    //Ciclo que recorre la cadena de entrada
-
-                // El .size() se utiliza para verificar si el "cursor" esta dentro de los limites de la cadena antes de realizar alguna operacion
-    for (char c : cadEnt) {                 //ciclo for basado en rango
-        if (c == '-') {
-            cursor = 0;                     // Mover al inicio
-        } else if (c == '+') {
-            cursor = cadSal.size();         // Mover al final       
-        } else if (c == '*') {
-            if (cursor < cadSal.size()) {
-                cursor++;                   // Mover una posición a la derecha
-            }
-        } else if (c == '3') {
-            if (cursor < cadSal.size()) {
-                cadSal.erase(cursor, 1);    // Eliminar carácter en la posición actual
-            }
-        } else {
-            cadSal.insert(cursor, 1, c);    // Insertar carácter en la posición actual
-            cursor++;                       // Avanzar la posicion del "cursor"
-        }
+    //Abrir el archivo de entrada y en caso de que no exista, lo crea
+    FILE *archivo = fopen("entrada.txt", "r");
+    if (!archivo) { // Verifica si el archivo no existe o esta vacio
+        cout << "Error al abrir el archivo de entrada." << endl;
+        archivo = fopen("entrada.txt", "w");    // Si no existe, lo crea
+        fclose(archivo);
+        cout << "Agregue las lineas de texto al archivo 'entrada.txt' antes de volver a ejeecutar el programa." << endl;
+        return 1;
+    }
+    // Limpiar el archivo de salida para que no se acumulon resultados de ejecuciones anteriores y solo muestre los resultados de la ejecución actual
+    FILE *salida = fopen("salida.txt", "w");
+    if (salida) {
+        fclose(salida);
+    } else {
+        cout << "Error al abrir el archivo de salida." << endl;
+        return 1;
     }
 
-    mostrar(cadSal);
+    char *cadEnt = new char [TAM] ();
+    // Evaluar cada línea del archivo de entrada
+    while (fgets(cadEnt, TAM, archivo)) {
+        transTxt(cadEnt);
+    }
+    delete[] cadEnt;
+    fclose(archivo);
+    return 0;
 }
 
-//Funcion que muestra la cadena de salida
-void mostrar(const string &cadSal) {
-    cout << cadSal << endl;
+// Funcion que transforma la cadena de entrada dependiendo de las teclas introducidas
+void transTxt(char* cadEnt) {
+    char *cadSal = new char [TAM] ();
+    int cursor = 0;                     // Posicion del "cursor"
+    int lon = 0;                        // Longitud de la cadena de salida que sirve para 
+
+    for (int i = 0; cadEnt[i] != '\0'; i++) {
+        if (cadEnt[i] == '-') {                     // Mover el "cursor" al inicio
+            cursor = 0;
+        } else if (cadEnt[i] == '+') {              // Mover el "cursor" al final
+            cursor = lon;
+        } else if (cadEnt[i] == '*') {              // Mover el "cursor" una posicion a la derecha
+            if (cursor < lon) cursor++;
+        } else if (cadEnt[i] == '3') {              // Eliminar caracter en la posición actual
+            if (lon > 0 && cursor < lon) {              // Verificar que la longitud sea mayor a 0 y que el cursor no este al final
+                for (int j = cursor; j < lon; j++) {    // Desplazar caracteres a la izquierda y elimina el caracter (lo que hace es copiar el caracter siguiente al actual, haciendo esto hasta el final de la cadena) 
+                    cadSal[j] = cadSal[j + 1];
+                }
+                lon--;  
+            }
+        } else {                                // Insertar carácter de entrada en el caracter de salida (copiar el caracter de entrada en el de salida) esto en caso de que no sea ninguna de las teclas especiales
+            for (int j = lon; j > cursor; j--) {    // Desplazar caracteres a la derecha e insertar el nuevo carácter
+                cadSal[j] = cadSal[j - 1];
+            }
+            cadSal[cursor] = cadEnt[i]; 
+            lon++;
+            cursor++;                  // Avanzar la posición del "cursor"
+        }
+    }
+    mostrar(cadSal);
+    delete[] cadSal;
+}
+
+// Funcion que muestra la cadena de salida
+void mostrar(char* cadSal) {
+    cout << cadSal;
+    FILE *archivo = fopen("salida.txt", "a");
+    if (archivo) {
+        fputs(cadSal, archivo);
+        fclose(archivo);
+    } else {
+        cout << "No se pudo abrir el archivo de salida." << endl;
+        return;
+    }
 }
