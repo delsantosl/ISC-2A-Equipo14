@@ -69,7 +69,7 @@ void transTxt(char* cadEnt) {
     delete[] cadSal;
 }
 
-// Funcion que muestra la cadena de salida
+// Funcion que muestra la cadena de salida y la guarda en el archivo de salida
 void mostrar(char* cadSal) {
     cout << cadSal;
     FILE *archivo = fopen("salida.txt", "a");
