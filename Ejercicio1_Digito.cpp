@@ -22,6 +22,13 @@ void evaluarISBN(ISBNData* isbn);
 int main(){
 	//Se declaran los archivos
     FILE* entradaArchivo = fopen("entrada.txt", "r");	//Se abre archivo de entrada para lectura
+    if (!entradaArchivo) { // Verifica si el archivo no existe 
+        cout << "Error al abrir el archivo de entrada." << endl;
+        entradaArchivo = fopen("entrada.txt", "w");    // Si no existe, lo crea
+        fclose(entradaArchivo);
+        cout << "Agregue los ISBN que se quieran evaluar al archivo 'entrada.txt' antes de volver a ejeecutar el programa." << endl;
+        return 1;
+    }
     FILE* salidaArchivo = fopen("salida.txt", "w");		//Se abre archivo de salida para escritura
     unsigned long long codigo;
 
