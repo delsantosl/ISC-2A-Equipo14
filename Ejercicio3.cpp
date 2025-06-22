@@ -1,7 +1,6 @@
 //Ejercicio #3 – Laberinto 
 
 #include <iostream>
-#include <fstream>
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
@@ -146,7 +145,7 @@ int laberinto(int **M,int ren,int col, int *posF, int *posC) {
         }
     }
     // Recorre la ultima columna de abajo hacia arriba
-    for (int i = ren - 2; i >= 0; i--) {    //recorre de ren-2 para evitar repetir sumar la esquina (ultimo elemento de la diagonal) sumada anteriormente
+    for (int i = ren - 2; i >= 0; i--) {    //recorre de ren-2 para no volver a sumar la esquina (ultimo elemento de la diagonal) sumada anteriormente
         suma += M[i][col - 1]; //-1 ya que el 0 tambien se toma como indice
         if (M[i][col - 1] == 0) {//si la celda actual encuentra un chacal lo incrementa
             chacales++;
