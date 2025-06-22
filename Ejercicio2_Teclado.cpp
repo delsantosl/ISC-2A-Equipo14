@@ -4,8 +4,12 @@
 using namespace std;
 #define TAM 250
 
+//PROTOTIPOS
+
 void transTxt(char* cadEnt);
 void mostrar(char* cadSal);
+
+//MAIN
 
 int main() {
     //Abrir el archivo de entrada y en caso de que no exista, lo crea
@@ -36,11 +40,13 @@ int main() {
     return 0;
 }
 
+//FUNCIONES
+
 // Funcion que transforma la cadena de entrada dependiendo de las teclas introducidas
 void transTxt(char* cadEnt) {
     char *cadSal = new char [TAM] ();
     int cursor = 0;                     // Posicion del "cursor"
-    int lon = 0;                        // Longitud de la cadena de salida que sirve para 
+    int lon = 0;                        // Longitud de la cadena de salida que ayuda a controlar los limites del cursor y evitar sobrescribir o leer fuera de la cadena valida (en caso de eliminar un caracter se reduce y viceversa) 
 
     for (int i = 0; cadEnt[i] != '\0'; i++) {
         if (cadEnt[i] == '-') {                     // Mover el "cursor" al inicio
@@ -57,12 +63,13 @@ void transTxt(char* cadEnt) {
                 lon--;  
             }
         } else {                                // Insertar carácter de entrada en el caracter de salida (copiar el caracter de entrada en el de salida) esto en caso de que no sea ninguna de las teclas especiales
-            for (int j = lon; j > cursor; j--) {    // Desplazar caracteres a la derecha e insertar el nuevo carácter
-                cadSal[j] = cadSal[j - 1];
+            for (int j = lon; j > cursor; j--) {    // Ciclo para desplazar caracteres a la derecha e insertar el nuevo caracter. Esto se hace para hacer "espacio" en la posicion cursor y poder insertar el nuevo caracter, sin perder los caracteres que ya estaban.
+
+                cadSal[j] = cadSal[j - 1];  
             }
-            cadSal[cursor] = cadEnt[i]; 
+            cadSal[cursor] = cadEnt[i];         // Copiar el caracter de entrada en la posicion del cursor
             lon++;
-            cursor++;                  // Avanzar la posición del "cursor"
+            cursor++;                           // Avanzar la posición del "cursor"
         }
     }
     mostrar(cadSal);
