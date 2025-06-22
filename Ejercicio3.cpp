@@ -122,7 +122,7 @@ void crearMatriz() {
     // Llenar la matriz con numeros aleatorios entre 0 y 5 (para que aparezcan mas chacales)
     for (int i = 0; i < MAX; i++) {
         for (int j = 0; j < MAX; j++) {
-            int numero = rand() % 5;  
+            int numero = rand() % 6;  
             fprintf(entrada,"%d ",numero);   // Escribir el numero en el archivo
         }
         fprintf(entrada,"\n");  // Nueva linea al final de cada fila del archivo
