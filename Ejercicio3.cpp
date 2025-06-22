@@ -135,22 +135,22 @@ int laberinto(int **M,int ren,int col, int *posF, int *posC) {
     int suma = 0,chacales = 0;
     // Recorre la diagonal principal
     for (int i = 0; i < ren; i++) {
-        suma += M[i][i];
+        suma += M[i][i];    //sumar diagonal
         if (M[i][i] == 0) { // Si encuentra un chacal (0), incrementa el contador
             chacales++;
             if (chacales == 3) {    // Si encuentra 3 chacales, guarda la posicion de filas y de columnas
-                *posF = i;
-                *posC = i;
+                *posF = i;  //asigna el valor para posicion de Filas
+                *posC = i;  //asigna el valor para posicion de Columnas
                 return suma;    //retorna suma
             }
         }
     }
     // Recorre la ultima columna de abajo hacia arriba
-    for (int i = ren - 2; i >= 0; i--) {    //ren-2 para evitar repetir la esquina
-        suma += M[i][col - 1];
+    for (int i = ren - 2; i >= 0; i--) {    //recorre de ren-2 para evitar repetir sumar la esquina (ultimo elemento de la diagonal) sumada anteriormente
+        suma += M[i][col - 1]; //-1 ya que el 0 tambien se toma como indice
         if (M[i][col - 1] == 0) {//si la celda actual encuentra un chacal lo incrementa
             chacales++;
-            if (chacales == 3) {// si encuentra 3 harales guarda la posicion y retorna la suma
+            if (chacales == 3) {// si encuentra 3 chacales, guarda la posicion y retorna la suma
                 *posF = i;
                 *posC = MAX - 1;
                 return suma;
