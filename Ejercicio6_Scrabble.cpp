@@ -221,37 +221,60 @@ bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabr
 }
 
 void mostrarTab(char **T){
-    cout << "   ";
+    FILE* salida=fopen("salida.txt","w");   
+    //validar si se abre corectamente el archivo
+    if(salida==NULL){
+        cout <<"Error al abrir el archivo.";
+        return ;
+    }
+    cout << "   ";	//mostrarr en pantalla
+    fprintf(salida,"    ");	//guardar en el archivo
     for (int j = 0; j < TAM; j++) {
         cout << " " << j << " ";
+        fprintf(salida," %d",j);
     }
     cout << "\n";
+    fprintf(salida,"\n");
 
     for (int i = 0; i < TAM; i++) {
         cout << "   ";
+        fprintf(salida,"    ");
         for (int j = 0; j < TAM; j++) {
             cout << "---";
+            fprintf(salida,"---");
         }
         cout << "-\n";
-
+        fprintf(salida,"-\n");
         cout << " " << i << " ";
+        fprintf(salida," %d",i);
         for (int j = 0; j < TAM; j++) {
-            cout << "|" << (T[i][j] == ' ' ? ' ' : T[i][j]) << " ";
+            cout << "| ";
+            fprintf(salida, "| ");
+            if(T[i][j]== ' '){
+                cout<< " ";
+                fprintf(salida, " ");
+            }
+            else{
+                cout << T[i][j];
+                fprintf(salida, "|%c", T[i][j]);
+            }
+            cout << " ";
+            fprintf(salida, " ");
         }
         cout << "|\n";
+        fprintf(salida,"|\n");
     }
 
     cout << "   ";
+    fprintf(salida,"    ");
+    
     for (int j = 0; j < TAM; j++) {
         cout << "---";
+        fprintf(salida,"---");
     }
     cout << "-\n\n";
-}
-void liberarT(char** T){
-	for(int i=0; i<TAM; i++){
-		free(T[i]);
-	}
-	free(T);
+    fprintf(salida,"-\n\n");
+    fclose(salida);// cerrar archivo de salida
 }
 	
 
