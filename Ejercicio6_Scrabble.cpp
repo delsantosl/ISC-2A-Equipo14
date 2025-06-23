@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string.h>
+#include <ctype.h>
 using namespace std;
 
 #define TAM 9
@@ -11,6 +13,7 @@ bool estaVacio(char **;
 bool esPalabra(char *);
 void mostrarTab(char **);
 bool yaExiste(char**,char*);
+void liberarT(char**);
 int main(){
 	char T**;
 	char *palabra;
@@ -59,7 +62,7 @@ int main(){
 		cout<<"Ingresar otra palabra....s"<<endl;
 		cin>>respuesta;
 	}while(tolower(respuesta)=='s');
-	delete[] palbra;
+	free (palbra);
 	liberarT(T);//liberar memoria del tablero
 	return 0;
 }
@@ -127,7 +130,7 @@ bool yaExiste(char**T,char*palabra){
 }
 
 //Verifica si alguna letra coincide con el tablero
-bool coincideConTablero(char **T, int f, int c, orientacion o, char *palabra){
+bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *palabra){
 	int len = strlen(palabra);
 	for(int i=0; i<len; i++){
 		int fi, ci;
@@ -150,11 +153,43 @@ bool coincideConTablero(char **T, int f, int c, orientacion o, char *palabra){
 
 bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabra){
 	int long=strlen(palabra);
+	int f,c;
 	//Verificar que la palabra quepa en el tablero
 	if(((o==HORIZONTAL) && (columna+long>TAM))||((o==VERTICAL) && (fila+long>TAM))){
 		return false;
 	}
 	//Verificar que alguna letra coincida con la palabra ya existente
+	if(coincideConTablero(T,fila,columna,o,palabra){
+		return false;
+	}
+	//Coloca la palabra
+	for(int i=0; i<long; i++){
+		f=fila;
+		c=columna;
+		if(o==VERTICAL){
+			f+=i;
+		}else{
+			c+=i;
+		}
+		T[f][c]=palabra[i];
+	}
+	return true;
+}
+
+void mostrarTab(char **T){
+	for(int i=0; i<TAM; i++){
+		for(int j=0; j<TAM; j++){
+			cout<<T[i][j];
+		}
+	}
+}
+void liberarT(char** T){
+	for(int i=0; i<TAM; i++){
+		free(T[i]);
+	}
+	free(T);
+}
 	
+
 	
 	
