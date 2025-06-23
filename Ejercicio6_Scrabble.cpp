@@ -37,7 +37,9 @@ int main(){
 	do{
 		cout<<"Palabra a ingresar:"<<endl;
 		cin>>palabra;
-		toupper(*palabra);
+		for(int i=0; palabra[i]!='\0'; i++){//convertir la palabra a mayusculas
+			palabra[i]=toupper(palabra[i]);
+		}
 		if(!esPalabra(palabra)){//Evaluar si  la palabra esta en el diccionario
 			cout<<"La palabra no esta en el diccionario"<<endl;
 			mostrarTab(T);
@@ -172,7 +174,7 @@ bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *pa
 		int fi=fila, ci=columna;
 
 		if(o == VERTICAL){
-			fi = fi+i;
+			fi = fila+i;
 			ci = columna;
 		}
 			else{
@@ -195,7 +197,7 @@ bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabr
 		return false;
 	}
 	//Verificar que alguna letra coincida con la palabra ya existente
-	if(coincideConTablero(T,fila,columna,o,palabra)){
+	if(!coincideConTablero(T,fila,columna,o,palabra)){
 		return false;
 	}
 	//Coloca la palabra
@@ -218,6 +220,7 @@ void mostrarTab(char **T){
 			cout<<T[i][j];
 		}
 	}
+	cout<<"\n";
 }
 void liberarT(char** T){
 	for(int i=0; i<TAM; i++){
