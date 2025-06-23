@@ -7,6 +7,7 @@ using namespace std;
 //prtotipos de funciones
 int laberinto(int **, int, int*, int*);
 void manejoArch();
+bool esValido(const char*);
 int obtenerTam(FILE*);
 int** crearMatDinamica(int);
 bool leerArch(FILE*,int**,int);
@@ -113,17 +114,23 @@ void liberarMat(int** M,int MAX){
 int obtenerTam(FILE* entrada){
 
     //variables para contar elemento y verificar matriz cuadrada
-    int elementos=0, valor, tam=0;
-    
-    //contar numeros
-    while(fscanf(entrada,"%d", &valor)==1){
-        elementos++;
-    }
+    int elementos=0;
+    char buffer [100];  //variable para validar si es numero
+
     //regresar al inicio del archivo
     fseek(entrada,0,SEEK_SET);
+    
+    //contar numeros
+    while(fscanf(entrada,"%s", buffer)==1){
+        if (!esNumeroValido(buffer)){
+            cout << "El valor no es nuemrico!\n";
+            return 0;
+        }
+        elementos++;
+    }
 
     //calcular tamaño de la posible matriz cuadrada sacando la raiz cuadrada al total de elementos calculados
-    tam=sqrt(elementos);
+    float tam=sqrt(elementos);
 
     //verificar si es matriz cuadrada perfecta
     if(tam*tam==elementos){
@@ -134,6 +141,7 @@ int obtenerTam(FILE* entrada){
 
 //funcion para leer datos numericos de un archivo y guardarlos en una matriz
 bool leerArch(FILE* entrada,int** M,int MAX){
+    fseek(entrada,0,SEEK_SET);  //volver al inicio del archivo
     //ciclo para leer los datos del archivo de entrada
     for(int i=0;i<MAX;i++){ //recorre filas
         for(int j=0; j<MAX;j++){    //recorre columnas
@@ -202,4 +210,18 @@ int laberinto(int **M,int MAX, int *posF, int *posC) {
 void guardarRes(FILE* salida,int suma,int posF,int posC){
     fprintf(salida, "Suma del recorrido: %d\n", suma); 
     fprintf(salida, "Posicion final: (%d,%d)\n" ,posF + 1, posC + 1);
+}
+
+//verificar si lo que contiene la cadena son digitos
+bool esNumeroValido(const char* str) {
+    if (*str == '-') str++; // Permitir numeros negativos si es necesario
+    bool tieneDigitos = false;
+    while (*str) {          //mientras tenga algo que leer
+        if (!isdigit(*str)) {   //si no es digito retorna falso
+            return false;
+        }
+        tieneDigitos = true;    //si es digito tineDigitos se hace true
+        str++;                  //pasa al sig caracter
+    }
+    return tieneDigitos;    //si es digito retorna true
 }
