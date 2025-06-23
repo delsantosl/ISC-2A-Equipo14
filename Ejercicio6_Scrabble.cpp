@@ -76,6 +76,7 @@ int main(){
 		cout<<"Ingresar otra palabra....s"<<endl;
 		cin>>respuesta;
 	}while(tolower(respuesta)=='s');
+	mostrarTab(T);
 	free (palabra);
 	liberarT(T);//liberar memoria del tablero
 	return 0;
