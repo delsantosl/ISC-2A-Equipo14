@@ -8,10 +8,14 @@ enum orientacion{ VERTICAL, HORIZONTAL};
 
 bool colocarPalabra(char **, int f, int c, orientacion o, char *palabra);
 bool estaVacio(char **;
-bool esPalabra(char *palabra);
-
+bool esPalabra(char *);
+void mostrarTab(char **);
+bool yaExiste(char**,char*);
 int main(){
 	char T**;
+	char *palabra;
+	int fila,columna,ori;
+	char respuesta;
 	//Crear matriz dinamica
 	T=(char**)calloc(TAM,sizeof(char*);
 	for(int i=0; i<TAM; i++){
@@ -23,8 +27,38 @@ int main(){
 			*(*(t+i)+j)==' ';
 		}
 	}
-	
-	
+	do{
+		cout<<"Palabra a ingresar:"<<endl;
+		cin>>palabra;
+		toupper(palabra);
+		if(!esPalabra(palabra){//Evaluar si  la palabra esta en el diccionario
+			cout<<"La palabra no esta en el diccionario"<<endl;
+			mostrarTab(T);
+		}else{
+			if(yaExiste(T,palabra)){//Evaluar si ya esta en el tablero
+					cout<<"La palabra ya esta en el tablero"<<endl
+					mostrarTab(T);
+			}else{//Pedir en donde se quiere poner la palabra
+				cout<<"Fila inicial:"<<endl;
+				cin>> fila;
+				cout<<"Columna inicial"<<endl;
+				cin>> columna;
+				cout<<"Orientacion....Horizontal=1 y Vertical=0 "<<endl;
+				cin>>ori;
+				if(colocarPalabra(T,fila,columna,ori,palabra){//Evaluar si se pudo colocar la palabra
+					cout<<"Palabra colocada:"<<endl;
+					mostrarTab(T);
+				}else{
+					cout<<"No se pudo colocar la palabra:"<<endl;
+					mostrarTab(T)
+				}
+			}
+		}
+		cout<<"Ingresar otra palabra....s"<<endl;
+		cin>>respuesta;
+	}while(tolower(respuesta)=='s');
+	delete[] palbra;
+	liberarT(T);//liberar memoria del tablero
 	return 0;
 }
 
