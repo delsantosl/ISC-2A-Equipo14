@@ -21,15 +21,17 @@ int main(){
 	int fila,columna,ori;
 	orientacion o;
 	char respuesta;
+	//Crear espacio para palabra
+	palabra=(char*)calloc(50,sizeof(char));
 	//Crear matriz dinamica
 	T=(char**)calloc(TAM,sizeof(char*));
 	for(int i=0; i<TAM; i++){
-		*(T+1)=(char*)calloc(TAM,sizeof(char));
+		T[i]=(char*)calloc(TAM,sizeof(char));
 	}
 	// Empezar con el tablero con espacios
 	for(int i=0; i<TAM; i++){
 		for(int j=0; j<TAM; j++){
-			*(*(T+i)+j)==' ';
+			T[i][j]=' ';
 		}
 	}
 	do{
@@ -83,11 +85,9 @@ bool estaVacio(char **T){
 			if(T[i][j] != ' '){
 				return false;
 			}
-			else{
-				return true;
-			}
 		}
 	}
+	return true;
 }
 void colocarEnCentro(char**T,char*palabra,orientacion o){
 	int longitud=strlen(palabra);
@@ -117,17 +117,17 @@ void colocarEnCentro(char**T,char*palabra,orientacion o){
 }
 
 bool esPalabra(char *palabra){
-	FILE *dicc = fopen("diccionario.txt","r");
+	FILE *diccionario = fopen("diccionario.txt","r");
 	if(!dicc) return false;
 
 	char temp[50];
-	while(fscanf(dicc, "%s", temp) == 1){
+	while(fscanf(diccionario, "%s", temp) == 1){
 		if(strcmp(temp, palabra) == 0){
-			fclose(dicc);
+			fclose(diccionario);
 			return true;
 		}
 	}
-	fclose(dicc);
+	fclose(diccionario);
 	return false;
 }
 
@@ -169,7 +169,7 @@ bool yaExiste(char**T,char*palabra){
 bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *palabra){
 	int len = strlen(palabra);
 	for(int i=0; i<len; i++){
-		int fi, ci;
+		int fi=fila, ci=columna;
 
 		if(o == VERTICAL){
 			fi = fi+i;
