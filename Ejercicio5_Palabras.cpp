@@ -128,6 +128,18 @@ bool validarLinea(FILE* entrada, juegoT &aux) {
             valido = false;
         }
     }
+    // Validar que iniTmp coincida con el inicio de palabraTmp
+    if (valido && strncmp(palabraTmp, iniTmp, strlen(iniTmp)) != 0) {   //strcmp (cadena 1, cadena 2, longitud de caracteres a comparar de ambas cadenas)
+        valido = false;
+    }
+    // Validar que finTmp coincida con el final de palabraTmp
+    if (valido) {
+        int longPalabra = strlen(palabraTmp);
+        int longFin = strlen(finTmp);
+        if (longFin > longPalabra || strcmp(palabraTmp + longPalabra - longFin, finTmp) != 0) {
+            valido = false;
+        }
+    }
     // Validar que: palabra, ini y fin no contengan espacios
     if (valido) {
         for (int i = 0; palabraTmp[i]; ++i)
