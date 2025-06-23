@@ -6,7 +6,7 @@ using namespace std;
 
 enum orientacion{ VERTICAL, HORIZONTAL};
 
-bool colocarPalabra(char **, int , int , int, char*);
+bool colocarPalabra(char **, int , int , orientacion, char*);
 bool estaVacio(char **;
 bool esPalabra(char *);
 void mostrarTab(char **);
@@ -15,6 +15,7 @@ int main(){
 	char T**;
 	char *palabra;
 	int fila,columna,ori;
+	orientacion o;
 	char respuesta;
 	//Crear matriz dinamica
 	T=(char**)calloc(TAM,sizeof(char*);
@@ -45,7 +46,8 @@ int main(){
 				cin>> columna;
 				cout<<"Orientacion....Horizontal=1 y Vertical=0 "<<endl;
 				cin>>ori;
-				if(colocarPalabra(T,fila,columna,ori,palabra){//Evaluar si se pudo colocar la palabra
+				o=(orientacion)ori;
+				if(colocarPalabra(T,fila,columna,o,palabra){//Evaluar si se pudo colocar la palabra
 					cout<<"Palabra colocada:"<<endl;
 					mostrarTab(T);
 				}else{
@@ -111,4 +113,14 @@ bool yaExiste(char**T,char*palabra){
 	}
 	return false;
 }
+
+bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabra){
+	int long=strlen(palabra);
+	//Verificar que la palabra quepa en el tablero
+	if(((o==HORIZONTAL) && (columna+long>TAM))||((o==VERTICAL) && (fila+long>TAM))){
+		return false;
+	}
+	//Verificar que alguna letra coincida con la palabra ya existente
+	
+	
 	
