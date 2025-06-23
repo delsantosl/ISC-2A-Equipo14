@@ -6,7 +6,7 @@ using namespace std;
 
 enum orientacion{ VERTICAL, HORIZONTAL};
 
-bool colocarPalabra(char **, int f, int c, orientacion o, char *palabra);
+bool colocarPalabra(char **, int , int , int, char*);
 bool estaVacio(char **;
 bool esPalabra(char *);
 void mostrarTab(char **);
@@ -78,3 +78,37 @@ bool estaVacio(char T**){
 bool esPalabra(char *palabra){
 	return 
 }
+bool yaExiste(char**T,char*palabra){
+	int long;
+	bool encontrada;
+	long=strlen(palabra);//Contar caracteres de la palabra
+	//Comprobar si la palabra ya existe de manera horizontal
+	for(int i=0; i<TAM; i++){//para ir evaluando en cada renglon
+		for(int j=0; j<TAM-long; j++){//para ir evaluando las columnas dejando los espacios que tendriaa los laterales
+			encontrada=true;
+			for(int k=0; k<long; k+){//para evaluar la palabra en las columnas
+				if(t[i][j+k]!=palabra[k]){//va comparando cada caracter
+					encontrada=false;
+				}
+			}
+			if(encontrada){
+				return encontrada
+			}
+		}
+	}
+	for(int i=0; i<TAM; i++){//para ir evaluando en cada columna
+		for(int j=0; j<TAM-long; j++){//para ir evaluando conforme a los renglones segun los espacion que tendria a los laterales
+			encontrada=true;
+			for(int k=0; k<long; k+){
+				if(t[i+k][j]!=palabra[k]){
+					encontrada=false;
+				}
+			}
+			if(encontrada){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+	
