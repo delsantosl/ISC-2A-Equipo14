@@ -182,7 +182,7 @@ bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *pa
 			ci = ci+i;
 		}
 		if(fi>=TAM||ci>=TAM){
-			return false
+			return false;
 		}
 		if(T[fi][ci] == palabra[i]){
 			return true;
