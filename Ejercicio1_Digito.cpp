@@ -17,6 +17,7 @@ struct ISBNData{
 void ISBN(unsigned long long codigo, int* A, int i = TAM - 1);
 bool ISBNValido(int A[]);
 void evaluarISBN(ISBNData* isbn);
+int contarDigitos(unsigned long long numero); 
 
 //Funcion principal
 int main(){
@@ -40,6 +41,13 @@ int main(){
 
 	//Ciclo que lee ISBNs del archivo mientras no se llegue al final
     while(fscanf(entradaArchivo, "%llu", &codigo) != EOF){
+	//Valida que tenga exactamente 13 digitos
+        if (contarDigitos(codigo) != 13) {
+            cout << "ISBN: " << codigo << " -> INVALIDO (longitud incorrecta)" << endl;
+            fprintf(salidaArchivo, "ISBN: %llu -> INVALIDO (longitud incorrecta)\n", codigo);
+            continue;
+        }
+	    
     	//Reserva memoria dinamica para el ISBNData
         ISBNData* isbn = new ISBNData;
         isbn->codigo = codigo;
@@ -73,6 +81,15 @@ int main(){
     return 0;
 }
 
+//Funcion para contar los digitos de un numero
+int contarDigitos(unsigned long long numero) {
+    int count = 0;
+    while(numero > 0){
+        numero /= 10;
+        count++;
+    }
+    return count;
+}
 
 //Funcion recursiva para llenar el arreglo de derecha a izquierda
 void ISBN(unsigned long long codigo, int* A, int i){
