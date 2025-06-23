@@ -37,7 +37,7 @@ int main(){
 	do{
 		cout<<"Palabra a ingresar:"<<endl;
 		cin>>palabra;
-		cin.ignore(100,"\n");
+		cin.ignore(100,'\n');
 		for(int i=0; palabra[i]!='\0'; i++){//convertir la palabra a mayusculas
 			palabra[i]=toupper(palabra[i]);
 		}
