@@ -93,7 +93,7 @@ bool estaVacio(char **T){
 }
 void colocarEnCentro(char**T,char*palabra,orientacion o){
 	int longitud=strlen(palabra);
-	int centrof=5,centroc=5;
+	int centrof=TAM/2,centroc=TAM/2;
 	//Ajustar donde inicia segun la orientacion
 	if(o==HORIZONTAL){
 		centroc-=longitud/2;
@@ -219,6 +219,7 @@ void mostrarTab(char **T){
 		for(int j=0; j<TAM; j++){
 			cout<<T[i][j];
 		}
+		cout<<"\n";
 	}
 	cout<<"\n";
 }
