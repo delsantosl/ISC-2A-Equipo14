@@ -175,13 +175,15 @@ bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *pa
 		int fi=fila, ci=columna;
 
 		if(o == VERTICAL){
-			fi = fila+i;
-			ci = columna;
+			fi = fi+i;
 		}
-			else{
-				fi = fila;
-				ci = columna+i;
-			}
+		else{
+			fi = fila;
+			ci = ci+i;
+		}
+		if(fi>=TAM||ci>=TAM){
+			return false
+		}
 		if(T[fi][ci] == palabra[i]){
 			return true;
 		}
