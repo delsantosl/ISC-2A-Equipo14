@@ -1,33 +1,26 @@
 //Ejercicio #3 – Laberinto 
 
 #include <iostream>
-#include <stdlib.h>
-#include <time.h>
+#include <math.h>   //para usar sqrt
 using namespace std;
 
-#define MAX 7
 //prtotipos de funciones
-void crearMatriz();
-int laberinto(int **, int, int, int*, int*);
+int laberinto(int **, int, int*, int*);
+void manejoArch();
+int obtenerTam(FILE*);
+int** crearMatDinamica(int);
+bool leerArch(FILE*,int**,int);
+void liberarMat(int**,int);
+void mostrarMat(int**,int,FILE*);
+void guardarRes(FILE*,int,int,int);
 
 // funcion principal
 int main() {
-    // creacion de matriz con memoria dinamica
-    int **M=new int*[MAX];
-    for(int i=0; i<MAX; i++){//asignar memoria dinamica a cada fila de la matriz
-        M[i]=new int[MAX];
-    }
-    if(M==NULL){
-        cout<<"Error al asignar memoria.";
-        return 1;
-    }
-
-    //variables para obtener datos
-    int posF=0, posC=0, suma=0;
-
-    //llamada a la funcion para crear la matriz
-    crearMatriz();
-
+    //llamada a funcion para manejar archivos y procesamiento
+    manejoArch();
+    return 0;
+}
+void manejoArch(){
     //abrir el archivo de entrada como lectura
     FILE* entrada= fopen("entrada.txt","r");
 
@@ -36,104 +29,146 @@ int main() {
         cout << "Error al abrir el archivo de entrada." << endl;
         entrada = fopen("entrada.txt", "w");    // Si no existe, lo crea como sobreescritura
         fclose(entrada);    //cerrar archivo
-        cout << "ingrese los datos de la matriz al archivo 'entrada.txt' antes de volver a ejecutar el programa." << endl;
-        return 1;
+        cout << "ingrese los datos al archivo 'entrada.txt' antes de volver a ejecutar el programa." << endl;
+        return ;
     }
+
+    //Determinar el tamaño de la matriz
+    int MAX=obtenerTam(entrada);//llamada a la funcion para obtener cuantos valores tiene el archivo
+
+    if(MAX==0){ //si el archivo no tiene valores o si es una matriz cuadrada
+        cout<<"El archivo no contiene una matriz valida o no es cuadrada";
+        fclose(entrada);    //cerrar archivo
+        return; //detener ejecucion 
+    }
+
+    //crear matriz con memoria dinamica
+    int ** M=crearMatDinamica(MAX); //llamada a funcion para asignar memoria dinamica
+    if(M==NULL){    //si la asignacion de memoria fallo
+        cout<<"Error al asignar memoria.";
+        fclose(entrada);    //cerrar archivo 
+        return ;   //detener ejecucion 
+    }
+
+    //leer datos del archivo
+    if(!leerArch(entrada,M,MAX)){   //si no se pudo leer el archivo correctamente
+        cout<<"Error al leer los datos del archivo";
+        liberarMat(M,MAX);  //libera memoria de la matriz
+        fclose(entrada);    //cerrar archivo
+        return; //detener ejecucion
+    }
+
+    //cerrar archivo de entrada
+    fclose(entrada);
 
     //crear o abrir el archivo de salida como sobreescritura
     FILE* salida= fopen("salida.txt","w");  
 
     //verificar si el archivo se abre correctamente
-    if (salida==NULL) { 
+    if (!salida) { 
         cout << "Error al abrir el archivo de salida." << endl;
-        return 1;
+        liberarMat(M,MAX);  //libera memoria
+        return ;    //detiene la ejecucion
     }
 
-    cout << "Matriz:" << endl; // Imprimir en pantalla
-    fprintf(salida,"Matriz: \n"); //guardar en archivo de salida
+    //llamada a funcion para mostrar Matriz
+    mostrarMat(M,MAX,salida);
 
-    //variables para manejo de filas y de columnas
-    int i=0;//Filas
-    int j=0;//Columnas
+    //llamada a la funcion laberinto para obtener la suma de la diagonal y de la ultima columna
+    int posF=0, posC=0, suma=0; //variables para obtener datos
+    suma = laberinto(M, MAX, &posF, &posC);
 
+    //llamada a funcion para guardar resultados en archivo de salida
+    guardarRes(salida,suma,posF,posC);
+
+    //mostrar resultados en pantalla
+    cout << "Suma del recorrido: " << suma << endl;
+    cout << "Posicion final: (" << posF + 1 << ", " << posC + 1 << ")" << endl;
+    
+    //liberar recursos
+    liberarMat(M,MAX);
+    fclose(salida);     //cerrar el archivo de salida
+}
+
+//funcion para asignar memoria a matriz
+int** crearMatDinamica(int MAX){
+    // creacion de matriz con memoria dinamica
+    int **M=new int*[MAX];
+    for(int i=0; i<MAX; i++){//asignar memoria dinamica a cada fila de la matriz
+        M[i]=new int[MAX];
+    }
+    return M;
+
+}
+
+//funcion para liberar memoria utilizada
+void liberarMat(int** M,int MAX){
+    for(int i=0; i<MAX; i++){
+        delete[] M[i];
+    }
+    delete[] M;
+}
+
+//funcion para obtener total de numeros del archivo
+int obtenerTam(FILE* entrada){
+
+    //variables para contar elemento y verificar matriz cuadrada
+    int elementos=0, valor, tam=0;
+    
+    //contar numeros
+    while(fscanf(entrada,"%d", &valor)==1){
+        elementos++;
+    }
+    //regresar al inicio del archivo
+    fseek(entrada,0,SEEK_SET);
+
+    //calcular tamaño de la posible matriz cuadrada sacando la raiz cuadrada al total de elementos calculados
+    tam=sqrt(elementos);
+
+    //verificar si es matriz cuadrada perfecta
+    if(tam*tam==elementos){
+        return tam;
+    }
+    return 0;
+}
+
+//funcion para leer datos numericos de un archivo y guardarlos en una matriz
+bool leerArch(FILE* entrada,int** M,int MAX){
     //ciclo para leer los datos del archivo de entrada
-    while (i < MAX && fscanf(entrada, "%d", &M[i][j]) == 1) {
-        j++;
-        if (j == MAX) {  // Cambiar de fila
-            j = 0;  //reiniciar columna
-            i++;    //aumentar fila
+    for(int i=0;i<MAX;i++){ //recorre filas
+        for(int j=0; j<MAX;j++){    //recorre columnas
+            if(fscanf(entrada,"%d", &M[i][j])!=1){// intenta leer un entero
+                return false; //si falla, retorna false
+            }
         }
     }
+    return true;    //si todos los datos se leyeron correctamente, retorna true
 
-    //validar si se leyeron todos los datos
-    if(i!=MAX){
-        cout<<"No se leyeron todos los datos!";
-    }
+}
+
+//mostrar matriz en pantalla y guardarla en el archivo de salida
+void mostrarMat(int** M,int MAX,FILE* salida){
+    cout << "Matriz " << MAX<<"x"<<MAX<<":"<<endl; // Imprimir en pantalla
+    fprintf(salida,"Matriz: %dx%d: \n",MAX,MAX); //guardar en archivo de salida
     
     //ciclo para mostrar la matriz de numeros
-    for (int x = 0; x <i; x++) {
-        for (int y = 0; y < MAX; y++) {
-            cout << M[x][y] << " ";//mostrar en pantalla
-            fprintf(salida,"%d ", M[x][y]);//guardar datos en el archivo de salida
+    for (int i=0; i<MAX; i++) { //filas
+        for (int j = 0; j < MAX; j++) {//columnas
+            cout << M[i][j] << " ";//mostrar en pantalla
+            fprintf(salida,"%d ", M[i][j]);//guardar datos en el archivo de salida
         }
         // Nueva linea al final de cada fila
         cout << endl;//mostrar en pantalla
         fprintf(salida,"\n"); //guardar en archivo de salida
     }
 
-    //llamada a la funcion laberinto para obtener la suma de la diagonal y de la ultima columna
-    suma = laberinto(M, MAX, MAX, &posF, &posC);
-
-    //mostrar datos en pantalla
-    cout << "Suma del recorrido: " << suma << endl;
-    cout << "Posicion final: (" << posF + 1 << ", " << posC + 1 << ")" << endl;
-
-    //guardar datos en el archivo de salida
-    fprintf(salida, "Suma del recorrido: %d\n", suma); 
-    fprintf(salida, "Posicion final: (%d,%d)\n" ,posF + 1, posC + 1);
-    
-    //cerrar archivos
-    fclose(entrada);    //cerrar el archivo de entrada
-    fclose(salida);     //cerrar el archivo de salida
-
-    //liberar memoria de la matriz y sus filas
-    for(int i=0; i<MAX; i++){
-        delete[] M[i]; 
-    }
-    delete[]M;
-
-    return 0;
 }
 
-//funcion para crear una matriz de aleatorios en un archivo de texto
-void crearMatriz() {
-    srand(time(NULL));  //para uso de creacion de numeros aleatorios
-    
-    //crear o abrir archivo de entrada como sobreescritura
-    FILE* entrada=fopen("entrada.txt","w");
-
-    // Verificar si el archivo se abre correctamente
-    if (entrada==NULL) {  
-        cout << "No se pudo crear el archivo de entrada" << endl;
-        return;
-    }
-
-    // Llenar la matriz con numeros aleatorios entre 0 y 5 (para que aparezcan mas chacales)
-    for (int i = 0; i < MAX; i++) {
-        for (int j = 0; j < MAX; j++) {
-            int numero = rand() % 6;  
-            fprintf(entrada,"%d ",numero);   // Escribir el numero en el archivo
-        }
-        fprintf(entrada,"\n");  // Nueva linea al final de cada fila del archivo
-    }
-
-    //cerrar archivo de entrada
-    fclose(entrada);
-}
-int laberinto(int **M,int ren,int col, int *posF, int *posC) {
+//funcion para obtener la suma de la diagonal y de ultima columna
+int laberinto(int **M,int MAX, int *posF, int *posC) {
     int suma = 0,chacales = 0;
     // Recorre la diagonal principal
-    for (int i = 0; i < ren; i++) {
+    for (int i = 0; i < MAX; i++) {
         suma += M[i][i];    //sumar diagonal
         if (M[i][i] == 0) { // Si encuentra un chacal (0), incrementa el contador
             chacales++;
@@ -145,9 +180,9 @@ int laberinto(int **M,int ren,int col, int *posF, int *posC) {
         }
     }
     // Recorre la ultima columna de abajo hacia arriba
-    for (int i = ren - 2; i >= 0; i--) {    //recorre de ren-2 para no volver a sumar la esquina (ultimo elemento de la diagonal) sumada anteriormente
-        suma += M[i][col - 1]; //-1 ya que el 0 tambien se toma como indice
-        if (M[i][col - 1] == 0) {//si la celda actual encuentra un chacal lo incrementa
+    for (int i = MAX - 2; i >= 0; i--) {    //recorre de MAX-2 para no volver a sumar la esquina (ultimo elemento de la diagonal) sumada anteriormente
+        suma += M[i][MAX - 1]; //-1 ya que el 0 tambien se toma como indice
+        if (M[i][MAX - 1] == 0) {//si la celda actual encuentra un chacal lo incrementa
             chacales++;
             if (chacales == 3) {// si encuentra 3 chacales, guarda la posicion y retorna la suma
                 *posF = i;
@@ -159,6 +194,12 @@ int laberinto(int **M,int ren,int col, int *posF, int *posC) {
 
     // Si no se encontraron 3 chacales, termina en la posicion (1,col-1)
     *posF = 0;
-    *posC = col -1;
+    *posC = MAX -1;
     return suma;
+}
+
+//guardar datos en el archivo de salida
+void guardarRes(FILE* salida,int suma,int posF,int posC){
+    fprintf(salida, "Suma del recorrido: %d\n", suma); 
+    fprintf(salida, "Posicion final: (%d,%d)\n" ,posF + 1, posC + 1);
 }
