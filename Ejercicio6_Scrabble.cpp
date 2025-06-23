@@ -146,10 +146,11 @@ bool yaExiste(char**T,char*palabra){
 			for(int k=0; k<longitud; k++){//para evaluar la palabra en las columnas
 				if(T[i][j+k]!=palabra[k]){//va comparando cada caracter
 					encontrada=false;
+					break;//No seguir evaluando si ya no coincide
 				}
 			}
 			if(encontrada){
-				return encontrada;
+				return true;
 			}
 		}
 	}
@@ -159,6 +160,7 @@ bool yaExiste(char**T,char*palabra){
 			for(int k=0; k<longitud; k++){
 				if(T[i+k][j]!=palabra[k]){
 					encontrada=false;
+					break;
 				}
 			}
 			if(encontrada){
