@@ -212,7 +212,7 @@ void guardarRes(FILE* salida,int suma,int posF,int posC){
     fprintf(salida, "Posicion final: (%d,%d)\n" ,posF + 1, posC + 1);
 }
 
-//verificar si lo que contiene la cadena son digitos
+//funcion para verificar si lo que contiene la cadena son digitos
 bool esNumeroValido(const char* str) {
     if (*str == '-') str++; // Permitir numeros negativos si es necesario
     bool tieneDigitos = false;
