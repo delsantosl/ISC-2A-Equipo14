@@ -9,38 +9,38 @@ using namespace std;
 enum orientacion{ VERTICAL, HORIZONTAL};
 
 bool colocarPalabra(char **, int , int , orientacion, char*);
-bool estaVacio(char **;
+bool estaVacio(char **);
 bool esPalabra(char *);
 void mostrarTab(char **);
 bool yaExiste(char**,char*);
 void liberarT(char**);
 void colocarEnCentro(char**,char*,orientacion);
 int main(){
-	char T**;
+	char **T;
 	char *palabra;
 	int fila,columna,ori;
 	orientacion o;
 	char respuesta;
 	//Crear matriz dinamica
-	T=(char**)calloc(TAM,sizeof(char*);
+	T=(char**)calloc(TAM,sizeof(char*));
 	for(int i=0; i<TAM; i++){
-		*(t+1)=(char*)calloc(TAM,sizeof(char);
+		*(T+1)=(char*)calloc(TAM,sizeof(char));
 	}
 	// Empezar con el tablero con espacios
 	for(int i=0; i<TAM; i++){
 		for(int j=0; j<TAM; j++){
-			*(*(t+i)+j)==' ';
+			*(*(T+i)+j)==' ';
 		}
 	}
 	do{
 		cout<<"Palabra a ingresar:"<<endl;
 		cin>>palabra;
-		toupper(palabra);
-		if(!esPalabra(palabra){//Evaluar si  la palabra esta en el diccionario
+		toupper(*palabra);
+		if(!esPalabra(palabra)){//Evaluar si  la palabra esta en el diccionario
 			cout<<"La palabra no esta en el diccionario"<<endl;
 			mostrarTab(T);
 		}else{
-			if(estaVacio(T){
+			if(estaVacio(T)){
 				cout<<"Es la primera palabra ingresada"<<endl;
 				cout<<"Orientacion....Horizontal=1 y Vertical=0 "<<endl;
 				cin>>ori;
@@ -49,7 +49,7 @@ int main(){
 				mostrarTab(T);
 			}else{
 				if(yaExiste(T,palabra)){//Evaluar si ya esta en el tablero
-					cout<<"La palabra ya esta en el tablero"<<endl
+					cout<<"La palabra ya esta en el tablero"<<endl;
 					mostrarTab(T);
 				}else{//Pedir en donde se quiere poner la palabra
 					cout<<"Fila inicial:"<<endl;
@@ -59,12 +59,12 @@ int main(){
 					cout<<"Orientacion....Horizontal=1 y Vertical=0 "<<endl;
 					cin>>ori;
 					o=(orientacion)ori;
-					if(colocarPalabra(T,fila,columna,o,palabra){//Evaluar si se pudo colocar la palabra
+					if(colocarPalabra(T,fila,columna,o,palabra)){//Evaluar si se pudo colocar la palabra
 						cout<<"Palabra colocada:"<<endl;
 						mostrarTab(T);
 					}else{
 						cout<<"No se pudo colocar la palabra:"<<endl;
-						mostrarTab(T)
+						mostrarTab(T);
 					}
 				}
 			}
@@ -72,12 +72,12 @@ int main(){
 		cout<<"Ingresar otra palabra....s"<<endl;
 		cin>>respuesta;
 	}while(tolower(respuesta)=='s');
-	free (palbra);
+	free (palabra);
 	liberarT(T);//liberar memoria del tablero
 	return 0;
 }
 
-bool estaVacio(char T**){
+bool estaVacio(char **T){
 	for(int i=0; i<TAM; i++){
 		for(int j=0; j<TAM; j++){
 			if(T[i][j] != ' '){
@@ -90,21 +90,21 @@ bool estaVacio(char T**){
 	}
 }
 void colocarEnCentro(char**T,char*palabra,orientacion o){
-	int long=strlen(palabra);
+	int longitud=strlen(palabra);
 	int centrof=5,centroc=5;
 	//Ajustar donde inicia segun la orientacion
 	if(o==HORIZONTAL){
-		centroc-=long/2;
+		centroc-=longitud/2;
 	}else{
-		centrof-=long/2;
+		centrof-=longitud/2;
 	}
 	//Verificar si cabe en el tablero
-	if(centrf<0||centroc<0||(o==HORIZONTAL&& centroc+long>TAM)||(o==VERTICAL && centrof+long>TAM)){
+	if(centrof<0||centroc<0||(o==HORIZONTAL&& centroc+longitud>TAM)||(o==VERTICAL && centrof+longitud>TAM)){
 		cout<<"La palabra no cabe"<<endl;
-		return 1;
+		return ;
 	}
 	//Colocar palabra
-	for(int i=0; i<long; i++){
+	for(int i=0; i<longitud; i++){
 		int fila=centrof;
 		int col=centroc;
 		if(o==VERTICAL){
@@ -114,7 +114,6 @@ void colocarEnCentro(char**T,char*palabra,orientacion o){
 		}
 		T[fila][col]=palabra[i];
 	}
-	return 0;
 }
 
 bool esPalabra(char *palabra){
@@ -133,28 +132,28 @@ bool esPalabra(char *palabra){
 }
 
 bool yaExiste(char**T,char*palabra){
-	int long;
+	int longitud;
 	bool encontrada;
-	long=strlen(palabra);//Contar caracteres de la palabra
+	longitud=strlen(palabra);//Contar caracteres de la palabra
 	//Comprobar si la palabra ya existe de manera horizontal
 	for(int i=0; i<TAM; i++){//para ir evaluando en cada renglon
-		for(int j=0; j<TAM-long; j++){//para ir evaluando las columnas dejando los espacios que tendriaa los laterales
+		for(int j=0; j<TAM-longitud; j++){//para ir evaluando las columnas dejando los espacios que tendriaa los laterales
 			encontrada=true;
-			for(int k=0; k<long; k+){//para evaluar la palabra en las columnas
-				if(t[i][j+k]!=palabra[k]){//va comparando cada caracter
+			for(int k=0; k<longitud; k++){//para evaluar la palabra en las columnas
+				if(T[i][j+k]!=palabra[k]){//va comparando cada caracter
 					encontrada=false;
 				}
 			}
 			if(encontrada){
-				return encontrada
+				return encontrada;
 			}
 		}
 	}
 	for(int i=0; i<TAM; i++){//para ir evaluando en cada columna
-		for(int j=0; j<TAM-long; j++){//para ir evaluando conforme a los renglones segun los espacion que tendria a los laterales
+		for(int j=0; j<TAM-longitud; j++){//para ir evaluando conforme a los renglones segun los espacion que tendria a los laterales
 			encontrada=true;
-			for(int k=0; k<long; k+){
-				if(t[i+k][j]!=palabra[k]){
+			for(int k=0; k<longitud; k++){
+				if(T[i+k][j]!=palabra[k]){
 					encontrada=false;
 				}
 			}
@@ -174,11 +173,11 @@ bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *pa
 
 		if(o == VERTICAL){
 			fi = fi+i;
-			ci = c;
+			ci = columna;
 		}
 			else{
-				fi = f;
-				ci = c+i;
+				fi = fila;
+				ci = columna+i;
 			}
 		if(T[fi][ci] == palabra[i]){
 			return true;
@@ -189,18 +188,18 @@ bool coincideConTablero(char **T, int fila, int columna, orientacion o, char *pa
 
 
 bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabra){
-	int long=strlen(palabra);
+	int longitud=strlen(palabra);
 	int f,c;
 	//Verificar que la palabra quepa en el tablero
-	if(((o==HORIZONTAL) && (columna+long>TAM))||((o==VERTICAL) && (fila+long>TAM))){
+	if(((o==HORIZONTAL) && (columna+longitud>TAM))||((o==VERTICAL) && (fila+longitud>TAM))){
 		return false;
 	}
 	//Verificar que alguna letra coincida con la palabra ya existente
-	if(coincideConTablero(T,fila,columna,o,palabra){
+	if(coincideConTablero(T,fila,columna,o,palabra)){
 		return false;
 	}
 	//Coloca la palabra
-	for(int i=0; i<long; i++){
+	for(int i=0; i<longitud; i++){
 		f=fila;
 		c=columna;
 		if(o==VERTICAL){
