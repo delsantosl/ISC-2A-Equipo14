@@ -7,7 +7,7 @@ using namespace std;
 //prtotipos de funciones
 int laberinto(int **, int, int*, int*);
 void manejoArch();
-bool esValido(const char*);
+bool esNumeroValido(const char*);
 int obtenerTam(FILE*);
 int** crearMatDinamica(int);
 bool leerArch(FILE*,int**,int);
