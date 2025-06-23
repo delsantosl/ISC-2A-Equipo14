@@ -221,13 +221,31 @@ bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabr
 }
 
 void mostrarTab(char **T){
-	for(int i=0; i<TAM; i++){
-		for(int j=0; j<TAM; j++){
-			cout<<T[i][j];
-		}
-		cout<<"\n";
-	}
-	cout<<"\n";
+    cout << "   ";
+    for (int j = 0; j < TAM; j++) {
+        cout << " " << j << " ";
+    }
+    cout << "\n";
+
+    for (int i = 0; i < TAM; i++) {
+        cout << "   ";
+        for (int j = 0; j < TAM; j++) {
+            cout << "---";
+        }
+        cout << "-\n";
+
+        cout << " " << i << " ";
+        for (int j = 0; j < TAM; j++) {
+            cout << "|" << (T[i][j] == ' ' ? ' ' : T[i][j]) << " ";
+        }
+        cout << "|\n";
+    }
+
+    cout << "   ";
+    for (int j = 0; j < TAM; j++) {
+        cout << "---";
+    }
+    cout << "-\n\n";
 }
 void liberarT(char** T){
 	for(int i=0; i<TAM; i++){
