@@ -220,61 +220,68 @@ bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabr
 	return true;
 }
 
-void mostrarTab(char **T){
-    FILE* salida=fopen("salida.txt","w");   
-    //validar si se abre corectamente el archivo
-    if(salida==NULL){
-        cout <<"Error al abrir el archivo.";
-        return ;
+void mostrarTab(char **T) {
+    FILE* salida = fopen("salida.txt", "w");   
+    if (salida == NULL) {
+        cout << "Error al abrir el archivo.";
+        return;
     }
-    cout << "   ";	//mostrarr en pantalla
-    fprintf(salida,"    ");	//guardar en el archivo
+
+    // Encabezado de columnas
+    cout << "    ";
+    fprintf(salida, "    ");
     for (int j = 0; j < TAM; j++) {
-        cout << " " << j << " ";
-        fprintf(salida," %d",j);
+        cout << " " << j << "  ";
+        fprintf(salida, " %d  ", j);
     }
     cout << "\n";
-    fprintf(salida,"\n");
+    fprintf(salida, "\n");
+
+    // Separador superior
+    cout << "   +";
+    fprintf(salida, "   +");
+    for (int j = 0; j < TAM; j++) {
+        cout << "---+";
+        fprintf(salida, "---+");
+    }
+    cout << "\n";
+    fprintf(salida, "\n");
 
     for (int i = 0; i < TAM; i++) {
-        cout << "   ";
-        fprintf(salida,"    ");
+        // Fila con valores
+        cout << " " << i << " |";
+        fprintf(salida, " %d |", i);
         for (int j = 0; j < TAM; j++) {
-            cout << "---";
-            fprintf(salida,"---");
+            if (T[i][j] == ' ') {
+                cout << "   |";
+                fprintf(salida, "   |");
+            } else {
+                cout << " " << T[i][j] << " |";
+                fprintf(salida, " %c |", T[i][j]);
+            }
         }
-        cout << "-\n";
-        fprintf(salida,"-\n");
-        cout << " " << i << " ";
-        fprintf(salida," %d",i);
+        cout << "\n";
+        fprintf(salida, "\n");
+
+        // Separador entre filas
+        cout << "   +";
+        fprintf(salida, "   +");
         for (int j = 0; j < TAM; j++) {
-            cout << "| ";
-            fprintf(salida, "| ");
-            if(T[i][j]== ' '){
-                cout<< " ";
-                fprintf(salida, " ");
-            }
-            else{
-                cout << T[i][j];
-                fprintf(salida, "|%c", T[i][j]);
-            }
-            cout << " ";
-            fprintf(salida, " ");
+            cout << "---+";
+            fprintf(salida, "---+");
         }
-        cout << "|\n";
-        fprintf(salida,"|\n");
+        cout << "\n";
+        fprintf(salida, "\n");
     }
 
-    cout << "   ";
-    fprintf(salida,"    ");
-    
-    for (int j = 0; j < TAM; j++) {
-        cout << "---";
-        fprintf(salida,"---");
-    }
-    cout << "-\n\n";
-    fprintf(salida,"-\n\n");
-    fclose(salida);// cerrar archivo de salida
+    fclose(salida);
+}
+
+void liberarT(char** T){
+	for(int i=0; i<TAM; i++){
+		free(T[i]);
+	}
+	free(T);
 }
 	
 
