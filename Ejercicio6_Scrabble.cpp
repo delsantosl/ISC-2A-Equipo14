@@ -118,7 +118,7 @@ void colocarEnCentro(char**T,char*palabra,orientacion o){
 
 bool esPalabra(char *palabra){
 	FILE *diccionario = fopen("diccionario.txt","r");
-	if(!dicc) return false;
+	if(!diccionario) return false;
 
 	char temp[50];
 	while(fscanf(diccionario, "%s", temp) == 1){
