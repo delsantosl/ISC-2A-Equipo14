@@ -78,8 +78,20 @@ bool estaVacio(char T**){
 }
 
 bool esPalabra(char *palabra){
-	return 
+	FILE *dicc = fopen("diccionario.txt","r");
+	if(!dicc) return false;
+
+	char temp[50];
+	while(fscanf(dicc, "%s", temp) == 1){
+		if(strcmp(temp, palabra) == 0){
+			fclose(dicc);
+			return true;
+		}
+	}
+	fclose(dicc);
+	return false;
 }
+
 bool yaExiste(char**T,char*palabra){
 	int long;
 	bool encontrada;
@@ -113,6 +125,28 @@ bool yaExiste(char**T,char*palabra){
 	}
 	return false;
 }
+
+//Verifica si alguna letra coincide con el tablero
+bool coincideConTablero(char **T, int f, int c, orientacion o, char *palabra){
+	int len = strlen(palabra);
+	for(int i=0; i<len; i++){
+		int fi, ci;
+
+		if(o == VERTICAL){
+			fi = fi+i;
+			ci = c;
+		}
+			else{
+				fi = f;
+				ci = c+i;
+			}
+		if(T[fi][ci] == palabra[i]){
+			return true;
+		}
+	}
+	return false;	
+}
+
 
 bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabra){
 	int long=strlen(palabra);
