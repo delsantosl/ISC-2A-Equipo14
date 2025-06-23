@@ -14,6 +14,7 @@ bool esPalabra(char *);
 void mostrarTab(char **);
 bool yaExiste(char**,char*);
 void liberarT(char**);
+void colocarEnCentro(char**,char*,orientacion);
 int main(){
 	char T**;
 	char *palabra;
@@ -39,23 +40,32 @@ int main(){
 			cout<<"La palabra no esta en el diccionario"<<endl;
 			mostrarTab(T);
 		}else{
-			if(yaExiste(T,palabra)){//Evaluar si ya esta en el tablero
-					cout<<"La palabra ya esta en el tablero"<<endl
-					mostrarTab(T);
-			}else{//Pedir en donde se quiere poner la palabra
-				cout<<"Fila inicial:"<<endl;
-				cin>> fila;
-				cout<<"Columna inicial"<<endl;
-				cin>> columna;
+			if(estaVacio(T){
+				cout<<"Es la primera palabra ingresada"<<endl;
 				cout<<"Orientacion....Horizontal=1 y Vertical=0 "<<endl;
 				cin>>ori;
 				o=(orientacion)ori;
-				if(colocarPalabra(T,fila,columna,o,palabra){//Evaluar si se pudo colocar la palabra
-					cout<<"Palabra colocada:"<<endl;
+				colocarEnCentro(T,palabra,o);
+				mostrarTab(T);
+			}else{
+				if(yaExiste(T,palabra)){//Evaluar si ya esta en el tablero
+					cout<<"La palabra ya esta en el tablero"<<endl
 					mostrarTab(T);
-				}else{
-					cout<<"No se pudo colocar la palabra:"<<endl;
-					mostrarTab(T)
+				}else{//Pedir en donde se quiere poner la palabra
+					cout<<"Fila inicial:"<<endl;
+					cin>> fila;
+					cout<<"Columna inicial"<<endl;
+					cin>> columna;
+					cout<<"Orientacion....Horizontal=1 y Vertical=0 "<<endl;
+					cin>>ori;
+					o=(orientacion)ori;
+					if(colocarPalabra(T,fila,columna,o,palabra){//Evaluar si se pudo colocar la palabra
+						cout<<"Palabra colocada:"<<endl;
+						mostrarTab(T);
+					}else{
+						cout<<"No se pudo colocar la palabra:"<<endl;
+						mostrarTab(T)
+					}
 				}
 			}
 		}
@@ -78,6 +88,33 @@ bool estaVacio(char T**){
 			}
 		}
 	}
+}
+void colocarEnCentro(char**T,char*palabra,orientacion o){
+	int long=strlen(palabra);
+	int centrof=5,centroc=5;
+	//Ajustar donde inicia segun la orientacion
+	if(o==HORIZONTAL){
+		centroc-=long/2;
+	}else{
+		centrof-=long/2;
+	}
+	//Verificar si cabe en el tablero
+	if(centrf<0||centroc<0||(o==HORIZONTAL&& centroc+long>TAM)||(o==VERTICAL && centrof+long>TAM)){
+		cout<<"La palabra no cabe"<<endl;
+		return 1;
+	}
+	//Colocar palabra
+	for(int i=0; i<long; i++){
+		int fila=centrof;
+		int col=centroc;
+		if(o==VERTICAL){
+			fila+=i;
+		}else{
+			col+=i;
+		}
+		T[fila][col]=palabra[i];
+	}
+	return 0;
 }
 
 bool esPalabra(char *palabra){
