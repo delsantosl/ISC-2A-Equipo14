@@ -206,16 +206,33 @@ bool colocarPalabra(char **T, int fila , int columna, orientacion o, char*palabr
 	if(!coincideConTablero(T,fila,columna,o,palabra)){
 		return false;
 	}
-	//Coloca la palabra
-	for(int i=0; i<longitud; i++){
-		f=fila;
-		c=columna;
-		if(o==VERTICAL){
-			f+=i;
-		}else{
-			c+=i;
+	//Verificar que no sobrescriba letras diferentes
+	for(int i = 0; i < longitud; i++){
+		f = fila;
+		c = columna;
+		if(o == VERTICAL){
+			f += i;
+		} 
+			else {
+				c += i;
+			}	
+		if(T[f][c] != ' ' && T[f][c] != palabra[i]){
+			//Conflicto con letra diferente
+			return false;
 		}
-		T[f][c]=palabra[i];
+	}
+
+	//Colocar la palabra si no hay conflictos
+	for(int i = 0; i < longitud; i++){
+		f = fila;
+		c = columna;
+		if(o == VERTICAL){
+			f += i;
+		} 
+			else {
+				c += i;
+			}
+		T[f][c] = palabra[i];
 	}
 	return true;
 }
