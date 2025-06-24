@@ -78,15 +78,23 @@ int main() {
 }
 
 //FUNCIONES
-
 //Funcion que carga el juego desde el archivo de entrada (pone en un arreglo de estructuras las palabras, pistas, tipo, inicio y fin de cada palabra valida)
 void cargarJuego(FILE *entrada, juegoT A[], int *tam) {
     juegoT aux;
     *tam = 0;
-    while (!feof(entrada)) {                // Leer hasta el final del archivo
-        if (validarLinea(entrada, aux)) {   // Validar la linea leida
-            A[*tam] = aux;                  // Si es valida, agregar al arreglo
-            (*tam) ++;                      // Incrementar el tamaño a de los registros validos
+    while (!feof(entrada)) {            // Leer hasta el final del archivo
+        if (validarLinea(entrada, aux)) {           // Validar la linea leida
+            bool repetida = false;              // Variable para verificar si la palabra ya fue ingresada
+            for (int i = 0; i < *tam; i++) {
+                if (strcmp(A[i].palabra, aux.palabra) == 0) {   // Comparar la palabra ingresada con las palabras ya guardadas
+                    repetida = true;                            // Si la palabra ya existe en el arreglo, marcarla como repetida
+                    break;                  // Salir del ciclo si se encuentra una palabra repetida
+                }
+            }
+            if (!repetida) {        // Si la palabra no esta repetida
+                A[*tam] = aux;      // Si es valida, agregar al arreglo
+                (*tam)++;           // Incrementar el tamaño a de los registros validos
+            }
         }
     }
 }
